@@ -46,37 +46,11 @@ GLFWwindow* get_window() {
 	return window;
 }
 
-int* get_array(int* size_buff, int *max_val) {
-	int max_size = 1000;
-	int min_size = 500;
-	srand(time(NULL));
-	size_t size = (rand() % max_size) + 1; 
-	if (size < min_size) {
-		size = min_size;
-	}
-	*size_buff = size;
-	
-	int* arr = malloc(size * sizeof(int)); 
-	if (arr == NULL) {
-		printf("Array Malloc failure\n"); 
-		exit(EXIT_FAILURE); 
-	}
 
-
-	for (int i = 0; i < size; i++) {
-		arr[i] = rand(); 
-		if (arr[i] > *max_val) {
-			*max_val = arr[i]; 
-		}
-	}
-
-	return arr; 
-
-}
 
 
 int main() {
-
+	
 	GLFWwindow* window = get_window(); 
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -86,44 +60,34 @@ int main() {
 
 	Shader shader = shader_create("vertex.glsl", "fragment.glsl");
 
-	size_t size_buff = 0; 
-	int max_value = 0;
+	VertsArrayInfo vertArrInfo = get_vertArrayInfo();
+	vertArrInfo.vertsArr[0] = generateArrayBarVertices(vertArrInfo);
 
-	int* targetArray = get_array(&size_buff, &max_value);
-	//printf("%d %d", size_buff, max_value); 
-	int max_iterations = (size_buff * (size_buff - 1)) / 2 + 1; // +1 for initial state, worst case sort is O(n^2), so allocate that much size. 
-	float** vertsArray = malloc(max_iterations * sizeof(float*));
-	if (vertsArray == NULL) {
-		printf("Verts array malloc failure\n"); 
-		exit(EXIT_FAILURE);
-	}
-	vertsArray[0] = generateArrayBarVertices(targetArray, size_buff, max_value);
-
-	//int totalVertArrays = openGL_bubble_sort(targetArray, size_buff, vertsArray, max_value);
-	int totalVertArrays = openGL_selection_sort(targetArray, size_buff, vertsArray, max_value);
-
-	unsigned int* VBO = malloc(totalVertArrays * sizeof(unsigned int));
+	//openGL_bubble_sort(&vertArrInfo);
+	openGL_selection_sort(&vertArrInfo);
+	//openGL_insertion_sort(&vertArrInfo);
+	unsigned int* VBO = malloc(vertArrInfo.totalVertArr * sizeof(unsigned int));
 	if (VBO == NULL) {
 		printf("VBO array malloc failure\n");
 		exit(EXIT_FAILURE);
 	}
-	glGenBuffers(totalVertArrays, VBO);
+	glGenBuffers(vertArrInfo.totalVertArr, VBO);
 
-	unsigned int* VAO = malloc(totalVertArrays * sizeof(unsigned int));
+	unsigned int* VAO = malloc(vertArrInfo.totalVertArr * sizeof(unsigned int));
 	if (VAO == NULL) {
 		printf("VAO array malloc failure\n");
 		exit(EXIT_FAILURE);
 	}
-	glGenVertexArrays(totalVertArrays, VAO);
+	glGenVertexArrays(vertArrInfo.totalVertArr, VAO);
 
 
-	for (int i = 0; i < totalVertArrays; i++) {
+	for (int i = 0; i < vertArrInfo.totalVertArr; i++) {
 		glBindVertexArray(VAO[i]);
 
 		glBindBuffer(GL_ARRAY_BUFFER, VBO[i]);
 
-		size_t total_floats = size_buff * 6 * 3;
-		glBufferData(GL_ARRAY_BUFFER, total_floats * sizeof(float), vertsArray[i], GL_STATIC_DRAW);
+		size_t total_floats = vertArrInfo.size_buff * 6 * 3;
+		glBufferData(GL_ARRAY_BUFFER, total_floats * sizeof(float), vertArrInfo.vertsArr[i], GL_STATIC_DRAW);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0);
 	}
@@ -141,7 +105,7 @@ int main() {
 		double currentTime = glfwGetTime(); 
 		if (currentTime - lastFrameTime > animationSpeed) {
 			currentSortIteration++;
-			if (currentSortIteration >= totalVertArrays) {
+			if (currentSortIteration >= vertArrInfo.totalVertArr) {
 				currentSortIteration = 0; 
 			}
 			lastFrameTime = currentTime; 
@@ -152,7 +116,7 @@ int main() {
 
 		shader_use(shader); 		
 		glBindVertexArray(VAO[currentSortIteration]);
-		glDrawArrays(GL_TRIANGLES, 0, size_buff * 6);
+		glDrawArrays(GL_TRIANGLES, 0, vertArrInfo.size_buff * 6);
 
 		// glBindVertexArray(0); // no need to unbind it every time 
 
@@ -165,11 +129,11 @@ int main() {
 	shader_deleteProg(shader);
 	free(VAO); 
 	free(VBO); 
-	free(targetArray);
-	for (int i = 0; i < totalVertArrays; i++) {
-		free(vertsArray[i]);
+	free(vertArrInfo.array);
+	for (int i = 0; i < vertArrInfo.totalVertArr; i++) {
+		free(vertArrInfo.vertsArr[i]);
 	}
-	free(vertsArray); 
+	free(vertArrInfo.vertsArr);
 	glfwTerminate();
 
 	return 0; 
