@@ -17,9 +17,11 @@ Currently supports **Bubble Sort** and **Selection Sort**, with more algorithms 
 
 
 Bubble Sort: 
+
 https://github.com/user-attachments/assets/a6374422-dd74-42f2-9127-0e408f47bd8f
 
 Selection Sort: 
+
 https://github.com/user-attachments/assets/f47578fc-ae58-4e20-97cc-bdca3d054955
 
 
