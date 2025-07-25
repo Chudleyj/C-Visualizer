@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 float* generateArrayBarVertices(int*, size_t, unsigned int); //TODO: This func prolly shouldnt be in this file. 
-int bubble_sort(int*, int, float**, unsigned int);
+unsigned int bubble_sort(int*, int, float**, unsigned int);
 void selection_sort(int*, int);
 void insertion_sort(int*, int);
 void merge(int*, int, int, int);
