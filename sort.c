@@ -46,7 +46,7 @@ static inline void xOR_swap(int* a, int* b) {
     *a = *a ^ *b;
 }
 
-unsigned int bubble_sort(int* arr, int size, float **vertsArray, unsigned int max_val) {
+unsigned int openGL_bubble_sort(int* arr, int size, float **vertsArray, unsigned int max_val) {
     unsigned int vertsArrayCounter = 1; //start at 1 bc we do the first index b4 we sort 
     if (size <= 1) return;
     bool swapped;
@@ -67,8 +67,8 @@ unsigned int bubble_sort(int* arr, int size, float **vertsArray, unsigned int ma
     return vertsArrayCounter;
 }
 
-void selection_sort(int* arr, int size) {
-
+unsigned int openGL_selection_sort(int* arr, int size, float **vertsArray, unsigned int max_val) {
+    unsigned int vertArrayCounter = 1;
     if (size <= 1) return;
 
     //size -1 bc last element always will be sorted automatically 
@@ -82,8 +82,11 @@ void selection_sort(int* arr, int size) {
 
         if (min_index != i) {
             xOR_swap((arr + i), (arr + min_index));
+            vertsArray[vertArrayCounter++] = generateArrayBarVertices(arr, size, max_val);
         }
     }
+
+    return vertArrayCounter;
 }
 
 void insertion_sort(int* arr, int size) {

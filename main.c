@@ -47,11 +47,12 @@ GLFWwindow* get_window() {
 }
 
 int* get_array(int* size_buff, int *max_val) {
-	int max_size = 100;
+	int max_size = 1000;
+	int min_size = 500;
 	srand(time(NULL));
 	size_t size = (rand() % max_size) + 1; 
-	if (size < 10) {
-		size = 10;
+	if (size < min_size) {
+		size = min_size;
 	}
 	*size_buff = size;
 	
@@ -98,7 +99,8 @@ int main() {
 	}
 	vertsArray[0] = generateArrayBarVertices(targetArray, size_buff, max_value);
 
-	int totalVertArrays = bubble_sort(targetArray, size_buff, vertsArray, max_value);
+	//int totalVertArrays = openGL_bubble_sort(targetArray, size_buff, vertsArray, max_value);
+	int totalVertArrays = openGL_selection_sort(targetArray, size_buff, vertsArray, max_value);
 
 	unsigned int* VBO = malloc(totalVertArrays * sizeof(unsigned int));
 	if (VBO == NULL) {
