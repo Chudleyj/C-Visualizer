@@ -29,8 +29,8 @@ char* getShaderCode(const char* path) {
         size_t lineLen = strlen(line); 
         if (len + lineLen + 1 > buffSize) {
             buffSize *= 2; 
-            char* newCode = realloc(code, buffSize); 
-            if (!newCode) {
+            char* newCode = realloc(code, buffSize*sizeof(char)); 
+            if (newCode == NULL) {
                 printf("Shader code realloc failure\n");
                 fclose(fp);
                 exit(EXIT_FAILURE);

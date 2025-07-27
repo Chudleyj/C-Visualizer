@@ -1,7 +1,7 @@
 # Sorting Visualizer in C with OpenGL
 
 A simple sorting algorithm visualizer written in C using OpenGL.  
-Currently supports **Bubble Sort** and **Selection Sort**, with more algorithms planned.
+Currently supports **Bubble Sort**, **Selection Sort**, *Insertion Sort**, *Merge Sort**, *Quicl Sort** with more algorithms planned.
 
 ---
 
