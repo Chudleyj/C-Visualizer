@@ -1,5 +1,8 @@
 
 #include "sort.h"
+#include "VertsArrayInfo.h"
+
+
 
 //Yeah yeah yeah,  xOR swaps are not efficient in 2025 but I love it
 static inline void xOR_swap(int* a, int* b) {

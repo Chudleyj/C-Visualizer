@@ -63,7 +63,7 @@ void generateArrayBarVertices(VertsArrayInfo* vInfo, int highlightIndex1, int hi
     vInfo->totalVertArr++; 
 }
 
-VertsArrayInfo get_vertArrayInfo() {
+VertsArrayInfo init_vertArrayInfo() {
     int max_size = 1000;
     int min_size = 500;
     int max_val = 0;
@@ -98,4 +98,44 @@ VertsArrayInfo get_vertArrayInfo() {
     VertsArrayInfo vInfo = { size, max_val, arr, vertsArray, max_iterations, 0 };
     return vInfo;
 
+}
+
+int get_sort_choice() {
+    signed char choice;
+    int flush;
+    printf("\nSorting Algorithm Menu:\n");
+    printf("1. Bubble Sort\n");
+    printf("2. Selection Sort\n");
+    printf("3. Insertion Sort\n");
+    printf("4. Merge Sort\n");
+    printf("5. Quick Sort\n");
+    //printf("6. Heap Sort\n");
+    //printf("7. Radix Sort\n");
+    printf("8. Exit\n");
+    printf("Enter Choice: ");
+
+    choice = getchar();
+
+    if ((flush = getchar()) != '\n') {
+        printf("Unknown Option\n");
+        return -1;
+    }
+
+    int option = choice - '0';  // Convert char to int
+    return option;
+}
+
+int get_vertex_draw_steps(VertsArrayInfo* vInfo) {
+    generateArrayBarVertices(vInfo, -1, -1);
+    int sortChoice = get_sort_choice();
+    if (sortChoice == 8) {
+        return -1;
+    }
+    else if (sortChoice >= 1 && sortChoice < NUM_SORT_FUNCTIONS) {
+        sort_functions[sortChoice](vInfo);
+    }
+    else {
+        printf("Unknown Option\n");
+        return -1;
+    }
 }
